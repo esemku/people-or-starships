@@ -3,11 +3,37 @@ import {
   loadPeopleSuccess,
   PEOPLE_ACTION_TYPES,
 } from 'ducks/people';
-import { all, call, takeLatest, put } from 'redux-saga/effects';
+import {
+  all,
+  call,
+  takeLatest,
+  put,
+  CallEffect,
+  PutEffect,
+} from 'redux-saga/effects';
 import { PeopleService } from 'services';
+import { Person } from 'types/people';
 
-export function* loadPeopleSaga() {
-  const response = yield call(PeopleService.getPeople);
+type LoadPeopleResponse = {
+  count: number;
+  next: string;
+  previous: string;
+  results: Person[];
+};
+
+export interface ActionLoadPeople {
+  type:
+    | typeof PEOPLE_ACTION_TYPES.LOAD_PEOPLE_SUCCESS
+    | typeof PEOPLE_ACTION_TYPES.LOAD_PEOPLE_FAILURE;
+  payload?: { people: Person[] };
+}
+
+export function* loadPeopleSaga(): Generator<
+  CallEffect<void> | PutEffect<ActionLoadPeople>,
+  void,
+  LoadPeopleResponse
+> {
+  const response: LoadPeopleResponse = yield call(PeopleService.getPeople);
 
   if (response) {
     yield put(loadPeopleSuccess(response.results));

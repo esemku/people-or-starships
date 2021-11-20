@@ -1,18 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ThemeProvider } from '@material-ui/core/styles';
 import { Provider } from 'react-redux';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import App from './components/App';
 import theme from './theme';
 import store from './store';
 
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <Provider store={store}>
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <App />
-    </Provider>
-  </ThemeProvider>,
+    </ThemeProvider>
+  </Provider>,
   document.getElementById('root'),
 );
