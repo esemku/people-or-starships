@@ -9,12 +9,17 @@ import { Starship } from 'types/starships';
 import { OpponentsSelector } from './molecules/OpponentsSelector';
 import { OpponentsCardsWrapper } from './molecules/OpponentsCardsWrapper';
 import useStyles from './styles';
-import { OpponentCard } from './atoms';
+import { OpponentCard, WinsCounter } from './atoms';
 
 export type OpponentsKind = 'people' | 'starships';
 export type Opponents = {
   firstOpponent: Person | Starship;
   secondOpponent: Person | Starship;
+};
+
+export type OpponentsWins = {
+  firstOpponent: number;
+  secondOpponent: number;
 };
 
 const App = () => {
@@ -29,6 +34,10 @@ const App = () => {
     secondOpponent: undefined,
   });
   const [showWinner, setShowWinner] = useState<boolean>(false);
+  const [winsCounter, setWinsCounter] = useState<OpponentsWins>({
+    firstOpponent: undefined,
+    secondOpponent: undefined,
+  });
 
   useEffect(() => {
     dispatch(loadPeople());
@@ -92,6 +101,25 @@ const App = () => {
     });
   };
 
+  const handleFightButtonClick = () => {
+    setShowWinner(true);
+    if (isFirstOpponentWinner()) {
+      setWinsCounter({
+        ...winsCounter,
+        firstOpponent: winsCounter.firstOpponent
+          ? winsCounter.firstOpponent + 1
+          : 1,
+      });
+    } else {
+      setWinsCounter({
+        ...winsCounter,
+        secondOpponent: winsCounter.secondOpponent
+          ? winsCounter.secondOpponent + 1
+          : 1,
+      });
+    }
+  };
+
   return (
     <>
       <main className={styles.root}>
@@ -106,29 +134,44 @@ const App = () => {
             Draw {opponentsKind}
           </LoadingButton>
         )}
-        {opponents.firstOpponent && (
-          <OpponentsCardsWrapper>
-            <OpponentCard
-              opponent={opponents.firstOpponent}
-              opponentsKind={opponentsKind}
-              isWinner={showWinner && isFirstOpponentWinner()}
+        {(winsCounter.firstOpponent || winsCounter.secondOpponent) && (
+          <div className={styles.winsCountersWrapper}>
+            <WinsCounter
+              totalWins={winsCounter.firstOpponent}
+              className={styles.firstPlayerWinsCounter}
             />
-            VS
-            <OpponentCard
-              opponent={opponents.secondOpponent}
-              opponentsKind={opponentsKind}
-              isWinner={showWinner && !isFirstOpponentWinner()}
+            <WinsCounter
+              totalWins={winsCounter.secondOpponent}
+              className={styles.secondPlayerWinsCounter}
             />
-          </OpponentsCardsWrapper>
+          </div>
         )}
         {opponents.firstOpponent && (
-          <Button
-            variant="outlined"
-            className={styles.fightButton}
-            onClick={() => setShowWinner(true)}
-          >
-            Fight!
-          </Button>
+          <>
+            <OpponentsCardsWrapper>
+              <OpponentCard
+                opponent={opponents.firstOpponent}
+                opponentsKind={opponentsKind}
+                isWinner={showWinner && isFirstOpponentWinner()}
+              />
+              VS
+              <OpponentCard
+                opponent={opponents.secondOpponent}
+                opponentsKind={opponentsKind}
+                isWinner={showWinner && !isFirstOpponentWinner()}
+              />
+            </OpponentsCardsWrapper>
+            <Button
+              variant="outlined"
+              className={styles.fightButton}
+              onClick={handleFightButtonClick}
+              size="large"
+              color="warning"
+              disabled={showWinner}
+            >
+              Fight!
+            </Button>
+          </>
         )}
       </main>
     </>

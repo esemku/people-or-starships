@@ -14,4 +14,14 @@ export default makeStyles({
   fightButton: {
     marginTop: 30,
   },
+  winsCountersWrapper: {
+    display: 'flex',
+    minHeight: 24,
+  },
+  firstPlayerWinsCounter: {
+    marginRight: 330,
+  },
+  secondPlayerWinsCounter: {
+    marginLeft: 330,
+  },
 });
