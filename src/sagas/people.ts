@@ -3,6 +3,7 @@ import {
   loadPeopleSuccess,
   PEOPLE_ACTION_TYPES,
 } from 'ducks/people';
+import { ActionLoadPeople } from 'ducks/people/actions';
 import {
   all,
   call,
@@ -14,22 +15,15 @@ import {
 import { PeopleService } from 'services';
 import { Person } from 'types/people';
 
-type LoadPeopleResponse = {
+export type LoadPeopleResponse = {
   count: number;
   next: string;
   previous: string;
   results: Person[];
 };
 
-export interface ActionLoadPeople {
-  type:
-    | typeof PEOPLE_ACTION_TYPES.LOAD_PEOPLE_SUCCESS
-    | typeof PEOPLE_ACTION_TYPES.LOAD_PEOPLE_FAILURE;
-  payload?: { people: Person[] };
-}
-
 export function* loadPeopleSaga(): Generator<
-  CallEffect<void> | PutEffect<ActionLoadPeople>,
+  CallEffect<LoadPeopleResponse> | PutEffect<ActionLoadPeople>,
   void,
   LoadPeopleResponse
 > {

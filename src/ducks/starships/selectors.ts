@@ -1,1 +1,3 @@
-export const getStarships = (state) => state.starships;
+import { IState } from 'types/ducks';
+
+export const getStarships = (state: IState) => state.starships;

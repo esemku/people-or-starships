@@ -3,6 +3,7 @@ import {
   loadStarshipsSuccess,
   STARSHIPS_ACTION_TYPES,
 } from 'ducks/starships';
+import { ActionLoadStarships } from 'ducks/starships/actions';
 import {
   all,
   call,
@@ -14,26 +15,21 @@ import {
 import { StarshipsService } from 'services';
 import { Starship } from 'types/starships';
 
-type LoadStarshipsResponse = {
+export type LoadStarshipsResponse = {
   count: number;
   next: string;
   previous: string;
   results: Starship[];
 };
 
-export interface ActionLoadStarships {
-  type:
-    | typeof STARSHIPS_ACTION_TYPES.LOAD_STARSHIPS_SUCCESS
-    | typeof STARSHIPS_ACTION_TYPES.LOAD_STARSHIPS_FAILURE;
-  payload?: { starships: Starship[] };
-}
-
 export function* loadStarshipsSaga(): Generator<
-  CallEffect<void> | PutEffect<ActionLoadStarships>,
+  CallEffect<LoadStarshipsResponse> | PutEffect<ActionLoadStarships>,
   void,
   LoadStarshipsResponse
 > {
-  const response = yield call(StarshipsService.getStarships);
+  const response: LoadStarshipsResponse = yield call(
+    StarshipsService.getStarships,
+  );
 
   if (response) {
     yield put(loadStarshipsSuccess(response.results));
