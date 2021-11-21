@@ -130,19 +130,25 @@ const App = () => {
             onClick={handleDrawButtonClick}
             loading={!people || !starships}
             className={styles.drawButton}
+            data-testid="drawButton"
           >
             Draw {opponentsKind}
           </LoadingButton>
         )}
         {(winsCounter.firstOpponent || winsCounter.secondOpponent) && (
-          <div className={styles.winsCountersWrapper}>
+          <div
+            className={styles.winsCountersWrapper}
+            data-testid="winsCounterWrapper"
+          >
             <WinsCounter
               totalWins={winsCounter.firstOpponent}
               className={styles.firstPlayerWinsCounter}
+              data-testid="firstPlayerWinsCounter"
             />
             <WinsCounter
               totalWins={winsCounter.secondOpponent}
               className={styles.secondPlayerWinsCounter}
+              data-testid="secondPlayerWinsCounter"
             />
           </div>
         )}
@@ -153,6 +159,7 @@ const App = () => {
                 opponent={opponents.firstOpponent}
                 opponentsKind={opponentsKind}
                 isWinner={showWinner && isFirstOpponentWinner()}
+                data-testid="firstOpponentCard"
               />
               VS
               <OpponentCard
@@ -168,6 +175,7 @@ const App = () => {
               size="large"
               color="warning"
               disabled={showWinner}
+              data-testid="fightButton"
             >
               Fight!
             </Button>

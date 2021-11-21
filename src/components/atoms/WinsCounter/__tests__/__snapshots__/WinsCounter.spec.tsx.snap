@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<WinsCounter /> renders correctly 1`] = `
+<div>
+  <div
+    class="className"
+  >
+    Total wins: 
+    1
+  </div>
+</div>
+`;

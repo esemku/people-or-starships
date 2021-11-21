@@ -8,8 +8,13 @@ type WinsCounterProps = {
 const WinsCounter: React.FC<WinsCounterProps> = ({
   totalWins,
   className,
+  ...rest
 }: WinsCounterProps) => {
-  return <div className={className}>Total wins: {totalWins || 0}</div>;
+  return (
+    <div className={className} {...rest}>
+      Total wins: {totalWins || 0}
+    </div>
+  );
 };
 
 export default WinsCounter;

@@ -7,6 +7,7 @@ import { OpponentsKind } from 'components/App';
 import { PEOPLE_CARD_ITEMS, STARSHIPS_CARD_ITEMS } from 'utils/cardItems';
 import { Starship } from 'types/starships';
 import clsx from 'clsx';
+import { nanoid } from 'nanoid';
 import useStyles from './styles';
 
 type OpponentCardProps = {
@@ -19,12 +20,20 @@ const OpponentCard: React.FC<OpponentCardProps> = ({
   opponent,
   isWinner,
   opponentsKind,
+  ...rest
 }: OpponentCardProps) => {
   const styles = useStyles();
 
   return (
-    <Card className={clsx(styles.root, isWinner && styles.rootWinner)}>
-      {isWinner && <div className={styles.winnerText}>WINNER!</div>}
+    <Card
+      className={clsx(styles.root, isWinner && styles.rootWinner)}
+      {...rest}
+    >
+      {isWinner && (
+        <div className={styles.winnerText} data-testid="winnerText">
+          WINNER!
+        </div>
+      )}
       <CardContent>
         {(opponentsKind === 'people'
           ? PEOPLE_CARD_ITEMS
@@ -32,7 +41,7 @@ const OpponentCard: React.FC<OpponentCardProps> = ({
         ).map((cardItem) => {
           if (cardItem.parameter === 'name') {
             return (
-              <Typography variant="body1" gutterBottom noWrap>
+              <Typography variant="body1" gutterBottom noWrap key={nanoid()}>
                 {`${cardItem.label}: ${opponent[cardItem.parameter]}`}
               </Typography>
             );
@@ -43,6 +52,7 @@ const OpponentCard: React.FC<OpponentCardProps> = ({
               color="text.secondary"
               gutterBottom
               noWrap
+              key={nanoid()}
             >
               {`${cardItem.label}: ${opponent[cardItem.parameter]}`}
             </Typography>

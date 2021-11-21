@@ -29,10 +29,14 @@ const OpponentsSelector: React.FC<OpponentsSelectorProps> = ({
             onChange(e.target.value as OpponentsKind)
           }
         >
-          <FormControlLabel value="people" control={<Radio />} label="People" />
+          <FormControlLabel
+            value="people"
+            control={<Radio data-testid="peopleRadioButton" />}
+            label="People"
+          />
           <FormControlLabel
             value="starships"
-            control={<Radio />}
+            control={<Radio data-testid="starshipsRadioButton" />}
             label="Starships"
           />
         </RadioGroup>
