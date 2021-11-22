@@ -27,11 +27,14 @@ export function* loadPeopleSaga(): Generator<
   void,
   LoadPeopleResponse
 > {
-  const response: LoadPeopleResponse = yield call(PeopleService.getPeople);
-
-  if (response) {
-    yield put(loadPeopleSuccess(response.results));
-  } else {
+  try {
+    const response: LoadPeopleResponse = yield call(PeopleService.getPeople);
+    if (response) {
+      yield put(loadPeopleSuccess(response.results));
+    } else {
+      yield put(loadPeopleFailure());
+    }
+  } catch (e) {
     yield put(loadPeopleFailure());
   }
 }

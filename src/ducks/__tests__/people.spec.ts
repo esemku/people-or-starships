@@ -26,7 +26,7 @@ describe('ducks/people', () => {
     it('fails to load currencies', () => {
       const newState = peopleReducer(state, loadPeopleFailure());
 
-      expect(newState).toStrictEqual(null);
+      expect(newState).toStrictEqual('error');
     });
   });
   describe('action creators', () => {

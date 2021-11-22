@@ -6,5 +6,5 @@ export type IState = {
   starships: IStarshipsState;
 };
 
-export type IPeopleState = Person[];
-export type IStarshipsState = Starship[];
+export type IPeopleState = Person[] | 'error';
+export type IStarshipsState = Starship[] | 'error';

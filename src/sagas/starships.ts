@@ -27,13 +27,17 @@ export function* loadStarshipsSaga(): Generator<
   void,
   LoadStarshipsResponse
 > {
-  const response: LoadStarshipsResponse = yield call(
-    StarshipsService.getStarships,
-  );
+  try {
+    const response: LoadStarshipsResponse = yield call(
+      StarshipsService.getStarships,
+    );
 
-  if (response) {
-    yield put(loadStarshipsSuccess(response.results));
-  } else {
+    if (response) {
+      yield put(loadStarshipsSuccess(response.results));
+    } else {
+      yield put(loadStarshipsFailure());
+    }
+  } catch (e) {
     yield put(loadStarshipsFailure());
   }
 }

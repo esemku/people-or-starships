@@ -122,6 +122,10 @@ exports[`<App /> renders correctly 1`] = `
         </div>
       </fieldset>
     </div>
+    <div
+      class="makeStyles-winsCountersWrapper-3"
+      data-testid="winsCounterWrapper"
+    />
   </main>
 </div>
 `;

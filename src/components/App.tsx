@@ -2,14 +2,16 @@ import { loadPeople, getPeople } from 'ducks/people';
 import { loadStarships, getStarships } from 'ducks/starships';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@mui/material';
+import { Alert, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { Person } from 'types/people';
 import { Starship } from 'types/starships';
+import { PEOPLE_RESOURCES, STARSHIPS_RESOURCES } from 'utils/resources';
 import { OpponentsSelector } from './molecules/OpponentsSelector';
 import { OpponentsCardsWrapper } from './molecules/OpponentsCardsWrapper';
 import useStyles from './styles';
 import { OpponentCard, WinsCounter } from './atoms';
+import { Select } from './atoms/Select';
 
 export type OpponentsKind = 'people' | 'starships';
 export type Opponents = {
@@ -38,11 +40,19 @@ const App = () => {
     firstOpponent: undefined,
     secondOpponent: undefined,
   });
+  const [resource, setResource] = useState<keyof Person | keyof Starship>();
+  const [showError, setShowError] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(loadPeople());
     dispatch(loadStarships());
   }, []);
+
+  useEffect(() => {
+    if (people === 'error' || starships === 'error') {
+      setShowError(true);
+    }
+  }, [people, starships]);
 
   const getTwoRandomNumbers = (arrayLength: number) => {
     const firstRandomNumber = Math.floor(Math.random() * arrayLength) + 0;
@@ -57,14 +67,18 @@ const App = () => {
     if (opponentsKind === 'people') {
       const twoRandomNumbers = getTwoRandomNumbers(people.length);
       setOpponents({
-        firstOpponent: people[twoRandomNumbers.firstRandomNumber],
-        secondOpponent: people[twoRandomNumbers.secondRandomNumber],
+        firstOpponent: people[twoRandomNumbers.firstRandomNumber] as Person,
+        secondOpponent: people[twoRandomNumbers.secondRandomNumber] as Person,
       });
     } else {
       const twoRandomNumbers = getTwoRandomNumbers(starships.length);
       setOpponents({
-        firstOpponent: starships[twoRandomNumbers.firstRandomNumber],
-        secondOpponent: starships[twoRandomNumbers.secondRandomNumber],
+        firstOpponent: starships[
+          twoRandomNumbers.firstRandomNumber
+        ] as Starship,
+        secondOpponent: starships[
+          twoRandomNumbers.secondRandomNumber
+        ] as Starship,
       });
     }
   };
@@ -72,16 +86,16 @@ const App = () => {
   const isFirstOpponentWinner = () => {
     if (opponentsKind === 'people') {
       if (
-        parseInt((opponents.firstOpponent as Person).mass, 10) >
-        parseInt((opponents.secondOpponent as Person).mass, 10)
+        parseInt((opponents.firstOpponent as Person)[resource], 10) >
+        parseInt((opponents.secondOpponent as Person)[resource], 10)
       ) {
         return true;
       }
       return false;
     }
     if (
-      parseInt((opponents.firstOpponent as Starship).crew, 10) >
-      parseInt((opponents.secondOpponent as Starship).crew, 10)
+      parseInt((opponents.firstOpponent as Starship)[resource], 10) >
+      parseInt((opponents.secondOpponent as Starship)[resource], 10)
     ) {
       return true;
     }
@@ -99,6 +113,7 @@ const App = () => {
       firstOpponent: undefined,
       secondOpponent: undefined,
     });
+    setResource(value === 'people' ? 'mass' : 'crew');
   };
 
   const handleFightButtonClick = () => {
@@ -120,6 +135,11 @@ const App = () => {
     }
   };
 
+  const handleResourcesSelectChange = (value) => {
+    setResource(value);
+    setShowWinner(false);
+  };
+
   return (
     <>
       <main className={styles.root}>
@@ -129,29 +149,43 @@ const App = () => {
             variant="outlined"
             onClick={handleDrawButtonClick}
             loading={!people || !starships}
-            className={styles.drawButton}
             data-testid="drawButton"
           >
             Draw {opponentsKind}
           </LoadingButton>
         )}
-        {(winsCounter.firstOpponent || winsCounter.secondOpponent) && (
-          <div
-            className={styles.winsCountersWrapper}
-            data-testid="winsCounterWrapper"
-          >
-            <WinsCounter
-              totalWins={winsCounter.firstOpponent}
-              className={styles.firstPlayerWinsCounter}
-              data-testid="firstPlayerWinsCounter"
-            />
-            <WinsCounter
-              totalWins={winsCounter.secondOpponent}
-              className={styles.secondPlayerWinsCounter}
-              data-testid="secondPlayerWinsCounter"
+        {opponents.firstOpponent && (
+          <div className={styles.selectWrapper}>
+            <Select
+              options={
+                opponentsKind === 'people'
+                  ? PEOPLE_RESOURCES
+                  : STARSHIPS_RESOURCES
+              }
+              onChange={handleResourcesSelectChange}
+              value={resource}
             />
           </div>
         )}
+        <div
+          className={styles.winsCountersWrapper}
+          data-testid="winsCounterWrapper"
+        >
+          {(winsCounter.firstOpponent || winsCounter.secondOpponent) && (
+            <>
+              <WinsCounter
+                totalWins={winsCounter.firstOpponent}
+                className={styles.firstPlayerWinsCounter}
+                data-testid="firstPlayerWinsCounter"
+              />
+              <WinsCounter
+                totalWins={winsCounter.secondOpponent}
+                className={styles.secondPlayerWinsCounter}
+                data-testid="secondPlayerWinsCounter"
+              />
+            </>
+          )}
+        </div>
         {opponents.firstOpponent && (
           <>
             <OpponentsCardsWrapper>
@@ -182,6 +216,11 @@ const App = () => {
           </>
         )}
       </main>
+      {showError && (
+        <Alert severity="error">
+          Sorry, something went wrong! Try refresh the page.
+        </Alert>
+      )}
     </>
   );
 };

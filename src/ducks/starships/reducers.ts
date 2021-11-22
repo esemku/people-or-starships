@@ -9,7 +9,7 @@ const starshipsReducer = (
     case STARSHIPS_ACTION_TYPES.LOAD_STARSHIPS_SUCCESS:
       return action.payload.starships;
     case STARSHIPS_ACTION_TYPES.LOAD_STARSHIPS_FAILURE:
-      return null;
+      return 'error';
     default:
       return state;
   }

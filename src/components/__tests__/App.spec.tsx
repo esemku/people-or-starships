@@ -45,9 +45,11 @@ describe('<App />', () => {
     expect(screen.getByTestId('firstOpponentCard')).toBeInTheDocument();
 
     const fightButton = screen.getByTestId('fightButton');
-    expect(screen.queryByTestId('winsCounterWrapper')).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId('firstPlayerWinsCounter'),
+    ).not.toBeInTheDocument();
     fireEvent.click(fightButton);
-    expect(screen.getByTestId('winsCounterWrapper')).toBeInTheDocument();
+    expect(screen.getByTestId('firstPlayerWinsCounter')).toBeInTheDocument();
   });
 
   it('disabling and enabling fight button when toggling between fight and draw button', () => {

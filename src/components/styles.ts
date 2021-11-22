@@ -8,9 +8,6 @@ export default makeStyles({
     alignItems: 'center',
     marginTop: 100,
   },
-  drawButton: {
-    marginTop: 60,
-  },
   fightButton: {
     marginTop: 30,
   },
@@ -23,5 +20,8 @@ export default makeStyles({
   },
   secondPlayerWinsCounter: {
     marginLeft: 330,
+  },
+  selectWrapper: {
+    marginTop: 30,
   },
 });

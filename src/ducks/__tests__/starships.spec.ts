@@ -26,7 +26,7 @@ describe('ducks/starships', () => {
     it('fails to load starships', () => {
       const newState = starshipsReducer(state, loadStarshipsFailure());
 
-      expect(newState).toStrictEqual(null);
+      expect(newState).toStrictEqual('error');
     });
   });
   describe('action creators', () => {

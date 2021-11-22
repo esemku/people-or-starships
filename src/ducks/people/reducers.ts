@@ -9,7 +9,7 @@ const peopleReducer = (
     case PEOPLE_ACTION_TYPES.LOAD_PEOPLE_SUCCESS:
       return action.payload.people;
     case PEOPLE_ACTION_TYPES.LOAD_PEOPLE_FAILURE:
-      return null;
+      return 'error';
     default:
       return state;
   }
